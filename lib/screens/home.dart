@@ -1,5 +1,6 @@
 import 'package:budget_tracker/pages/home_page.dart';
 import 'package:budget_tracker/pages/profile_page.dart';
+import 'package:budget_tracker/widgets/Dialogs/add_budget_dialog.dart';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
 
@@ -43,6 +44,25 @@ class _HomeState extends State<Home> {
             fontWeight: FontWeight.w500,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context, 
+                builder: (builder) {
+                  return AddBudgetDialog(
+                    budget: (budget ) { 
+                      
+                    },
+                  );
+                }
+              );
+            }, 
+            icon: const Icon(
+              Icons.attach_money,
+            ),
+          ),
+        ],
       ),
       body: pages[_currentPageIndex],
       bottomNavigationBar: BottomNavigationBar(

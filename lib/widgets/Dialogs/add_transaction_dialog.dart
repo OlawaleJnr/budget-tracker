@@ -45,7 +45,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
               Text(
                 "Add an expense",
                 style: GoogleFonts.openSans(
-                  fontSize: 16
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
