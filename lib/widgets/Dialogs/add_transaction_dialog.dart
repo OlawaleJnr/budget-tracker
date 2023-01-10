@@ -53,8 +53,14 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
               ),
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "Name of Expense",
+                  hintStyle: GoogleFonts.openSans(
+                    fontSize: 12,
+                  ),
+                ),
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
                 ),
               ),
               TextField(
@@ -65,15 +71,21 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 ],  
                 decoration: InputDecoration(
                   hintText: "Amount in ${format.currencySymbol}",
+                  hintStyle: GoogleFonts.openSans(
+                    fontSize: 12,
+                  ),
+                ),
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Is expense?",
-                    style: TextStyle(
-                      fontSize: 16
+                  Text(
+                    "Is Expense?",
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
                     ),
                   ),
                   Switch.adaptive(
@@ -102,9 +114,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     Navigator.pop(context);
                   }
                 }, 
-                child: const Text(
+                child: Text(
                   "Add",
-                  style: TextStyle(
+                  style: GoogleFonts.urbanist(
                     fontSize: 16,
                   ),
                 ),
