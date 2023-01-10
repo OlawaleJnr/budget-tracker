@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:budget_tracker/models/transaction.dart';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
   final Transaction transaction;
@@ -13,6 +16,11 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+     /// A way to format the currency to the user's locale.
+    final format = NumberFormat.simpleCurrency(
+      locale: Platform.localeName,
+      name: 'NGN',
+    );
     
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0, top: 5.0),
@@ -40,7 +48,7 @@ class TransactionCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              ((!transaction.isExpense) ? "+ " : "- ")  + transaction.amount.toString(),
+              "${(!transaction.isExpense) ? "+ " : "- "}${format.currencySymbol}${transaction.amount}",
               style: GoogleFonts.openSans(
                 fontSize: 14,
               ),

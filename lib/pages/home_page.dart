@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:budget_tracker/models/transaction.dart';
 import 'package:budget_tracker/widgets/Cards/transaction_card.dart';
+import 'package:budget_tracker/widgets/Dialogs/add_transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -27,11 +28,18 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            transactions.add(
-              Transaction(title: "Food", amount: 5.99)
-            );
-          });
+          showDialog(
+            context: context, 
+            builder: (builder) {
+              return AddTransactionDialog(
+                itemToAdd: (transaction) {
+                  setState(() {
+                    transactions.add(transaction);
+                  });
+                }
+              );
+            }
+          );
         },
         child: const Icon(
           Icons.add,
