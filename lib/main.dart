@@ -1,4 +1,5 @@
 import 'package:budget_tracker/screens/home.dart';
+import 'package:budget_tracker/services/budget_service.dart';
 import 'package:budget_tracker/services/theme_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +14,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeService>(
-      create: (_) => ThemeService(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeService>(
+          create: (_) => ThemeService()
+        ),
+        ChangeNotifierProvider<BudgetService>(
+          create: (_) => BudgetService()
+        ),
+      ],
       child: Builder(
         builder: (BuildContext context) {
           final themeService = Provider.of<ThemeService>(context);

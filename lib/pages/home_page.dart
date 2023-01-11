@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:budget_tracker/models/transaction.dart';
+import 'package:budget_tracker/services/budget_service.dart';
 import 'package:budget_tracker/widgets/Cards/transaction_card.dart';
 import 'package:budget_tracker/widgets/Dialogs/add_transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,7 +26,8 @@ class _HomePageState extends State<HomePage> {
       locale: Platform.localeName,
       name: 'NGN',
     );
-    
+    final budgetService = Provider.of<BudgetService>(context);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -55,31 +58,45 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: CircularPercentIndicator(
-                    radius: screenSize.width / 2,
-                    lineWidth: 10.0, // how thick the line is
-                    percent: .5, // percent goes from 0 -> 1
-                    backgroundColor: Colors.white,
-                    center: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "${format.currencySymbol}5,500",
-                          style: GoogleFonts.urbanist(
-                            fontSize: 35, 
-                            fontWeight: FontWeight.bold,
-                          ),
+                  child: Consumer<BudgetService>(
+                    builder: ((context, value, child) {
+                      return CircularPercentIndicator(
+                        radius: screenSize.width / 2,
+                        lineWidth: 10.0, // how thick the line is
+                        percent: .5, // percent goes from 0 -> 1
+                        backgroundColor: Colors.white,
+                        center: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "${format.currencySymbol}0",
+                              style: GoogleFonts.urbanist(
+                                fontSize: 30, 
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              "Balance",
+                              style: GoogleFonts.urbanist(
+                                fontSize: 16, 
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 8
+                            ),
+                            Text(
+                              "Budget: ${format.currencySymbol}${value.budget.toString()}",
+                              style: GoogleFonts.openSans(
+                                fontSize: 11, 
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Balance",
-                          style: GoogleFonts.urbanist(
-                            fontSize: 18, 
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),
-                    progressColor: Theme.of(context).colorScheme.primary,
+                        progressColor: Theme.of(context).colorScheme.primary,
+                      );
+                    }),
                   ),
                 ),
                 const SizedBox(
@@ -87,9 +104,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Text(
                   "Items",
-                  style: GoogleFonts.urbanist(
-                    fontSize: 20, 
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.openSans(
+                    fontSize: 18, 
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(
