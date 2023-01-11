@@ -1,8 +1,10 @@
 import 'package:budget_tracker/pages/home_page.dart';
 import 'package:budget_tracker/pages/profile_page.dart';
+import 'package:budget_tracker/services/theme_service.dart';
 import 'package:budget_tracker/widgets/Dialogs/add_budget_dialog.dart';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -36,12 +38,21 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final themeService = Provider.of<ThemeService>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "Budget Tracker",
           style: GoogleFonts.urbanist(
             fontWeight: FontWeight.w500,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            themeService.darkTheme = !themeService.darkTheme;
+          },
+          icon: Icon(
+            themeService.darkTheme ? Icons.sunny : Icons.dark_mode
           ),
         ),
         actions: [
