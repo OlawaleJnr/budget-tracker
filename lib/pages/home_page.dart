@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:budget_tracker/models/transaction.dart';
 import 'package:budget_tracker/services/budget_service.dart';
 import 'package:budget_tracker/widgets/Cards/transaction_card.dart';
 import 'package:budget_tracker/widgets/Dialogs/add_transaction_dialog.dart';
@@ -9,15 +8,8 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  List<Transaction> transactions = [];
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +18,6 @@ class _HomePageState extends State<HomePage> {
       locale: Platform.localeName,
       name: 'NGN',
     );
-    final budgetService = Provider.of<BudgetService>(context);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -36,9 +27,8 @@ class _HomePageState extends State<HomePage> {
             builder: (builder) {
               return AddTransactionDialog(
                 itemToAdd: (transaction) {
-                  setState(() {
-                    transactions.add(transaction);
-                  });
+                  final budgetService = Provider.of<BudgetService>(context, listen:false);
+                  budgetService.addTransaction(transaction);
                 }
               );
             }
@@ -63,13 +53,13 @@ class _HomePageState extends State<HomePage> {
                       return CircularPercentIndicator(
                         radius: screenSize.width / 2,
                         lineWidth: 10.0, // how thick the line is
-                        percent: .5, // percent goes from 0 -> 1
+                        percent: (value.balance / value.budget), // percent goes from 0 -> 1
                         backgroundColor: Colors.white,
                         center: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "${format.currencySymbol}0",
+                              "${format.currencySymbol}${value.balance.toString().split(".")[0]}",
                               style: GoogleFonts.urbanist(
                                 fontSize: 30, 
                                 fontWeight: FontWeight.w600,
@@ -83,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             const SizedBox(
-                              height: 8
+                              height: 8 
                             ),
                             Text(
                               "Budget: ${format.currencySymbol}${value.budget.toString()}",
@@ -112,11 +102,18 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 10,
                 ),
-                ...List.generate(
-                  transactions.length, 
-                  (index) => TransactionCard(
-                    transaction: transactions[index],
-                  ),
+                Consumer<BudgetService>(
+                  builder: ((context, value, child) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: value.transactions.length,
+                      itemBuilder: (context, index) {
+                        return TransactionCard(
+                          transaction: value.transactions[index],
+                        );
+                      },
+                    );
+                  }),
                 ),
               ],
             )
