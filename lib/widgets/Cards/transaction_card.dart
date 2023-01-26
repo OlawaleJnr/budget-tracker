@@ -21,6 +21,7 @@ class TransactionCard extends StatelessWidget {
       locale: Platform.localeName,
       name: 'NGN',
     );
+    var formatter = NumberFormat('##,###,000');
     
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0, top: 5.0),
@@ -48,7 +49,7 @@ class TransactionCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              "${(!transaction.isExpense) ? "+ " : "- "}${format.currencySymbol}${transaction.amount}",
+              "${(!transaction.isExpense) ? "+ " : "- "}${format.currencySymbol}${formatter.format(transaction.amount)}",
               style: GoogleFonts.openSans(
                 fontSize: 14,
               ),

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io'; 
 import 'package:budget_tracker/services/budget_service.dart';
 import 'package:budget_tracker/widgets/Cards/transaction_card.dart';
 import 'package:budget_tracker/widgets/Dialogs/add_transaction_dialog.dart';
@@ -18,6 +18,7 @@ class HomePage extends StatelessWidget {
       locale: Platform.localeName,
       name: 'NGN',
     );
+    var formatter = NumberFormat('##,###,000');
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -59,7 +60,7 @@ class HomePage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "${format.currencySymbol}${value.balance.toString().split(".")[0]}",
+                              "${format.currencySymbol}${formatter.format(value.balance).toString().split(".")[0]}",
                               style: GoogleFonts.urbanist(
                                 fontSize: 30, 
                                 fontWeight: FontWeight.w600,
@@ -76,7 +77,7 @@ class HomePage extends StatelessWidget {
                               height: 8 
                             ),
                             Text(
-                              "Budget: ${format.currencySymbol}${value.budget.toString()}",
+                              "Budget: ${format.currencySymbol}${formatter.format(value.budget).toString()}",
                               style: GoogleFonts.openSans(
                                 fontSize: 11, 
                                 fontWeight: FontWeight.w400,
@@ -107,6 +108,7 @@ class HomePage extends StatelessWidget {
                     return ListView.builder(
                       shrinkWrap: true,
                       itemCount: value.transactions.length,
+                      physics: const ClampingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return TransactionCard(
                           transaction: value.transactions[index],
