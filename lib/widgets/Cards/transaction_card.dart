@@ -21,7 +21,7 @@ class TransactionCard extends StatelessWidget {
       locale: Platform.localeName,
       name: 'NGN',
     );
-    var formatter = NumberFormat('##,###,000');
+    final formatter = NumberFormat('##,###,000');
     
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0, top: 5.0),

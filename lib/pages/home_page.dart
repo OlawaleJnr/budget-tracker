@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
       locale: Platform.localeName,
       name: 'NGN',
     );
-    var formatter = NumberFormat('##,###,000');
+    final formatter = NumberFormat('##,###,000');
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
