@@ -10,7 +10,7 @@ class LocalStorageService {
   /// Creating a singleton instance of the class.
   static final LocalStorageService _instance = LocalStorageService._internal();
 
-  /// > The function returns the instance of the class
+  /// The function returns the instance of the class
   /// 
   /// Returns: 
   ///   The instance of the service.
@@ -58,16 +58,16 @@ class LocalStorageService {
     final balanceBox = Hive.box<double>(balanceBoxKey);
     /// Getting the value of the key `balance` from the box `balanceBox` and if it is null, it is assigning the value `0.0` to it.
     final currentBalance = balanceBox.get("balance") ?? 0.0;
+    /// Getting the budget from the budgetBoxKey box in Hive.
+    final currentBudget = getBudget();
     /// Checking if the transaction is an expense or not. If it is an expense, it is subtracting the amount from the current balance and if it is not an expense, it is adding the amount to the current balance.
     if (transaction.isExpense) {
-      await balanceBox.put("balance", currentBalance - transaction.amount);
+      await balanceBox.put("balance", currentBudget - transaction.amount);
     } else {
       await balanceBox.put("balance", currentBalance + transaction.amount);
-      // if (balance > _budget) {
-      //   _budget = balance;
-      // } else {
-      //   _budget = transaction.amount;
-      // }
+      if (currentBalance > currentBudget) {
+        await saveBudget(currentBalance);
+      }
     }
   }
 
@@ -90,7 +90,7 @@ class LocalStorageService {
     return Hive.box<double>(budgetBoxKey).put("budget", budget);
   }
 
-  /// > If the budgetBoxKey box exists, return the value of the budget key, otherwise return 0.0
+  /// If the budgetBoxKey box exists, return the value of the budget key, otherwise return 0.0
   /// 
   /// Returns:
   ///   The budget value from the budgetBoxKey box.

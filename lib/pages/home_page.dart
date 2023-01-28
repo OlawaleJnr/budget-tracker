@@ -1,5 +1,5 @@
 import 'dart:io'; 
-import 'package:budget_tracker/services/budget_service.dart';
+import 'package:budget_tracker/view_models/budget_view_model.dart';
 import 'package:budget_tracker/widgets/Cards/transaction_card.dart';
 import 'package:budget_tracker/widgets/Dialogs/add_transaction_dialog.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
             builder: (builder) {
               return AddTransactionDialog(
                 itemToAdd: (transaction) {
-                  final budgetService = Provider.of<BudgetService>(context, listen:false);
+                  final budgetService = Provider.of<BudgetViewModel>(context, listen:false);
                   budgetService.addTransaction(transaction);
                 }
               );
@@ -49,18 +49,28 @@ class HomePage extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Consumer<BudgetService>(
+                  child: Consumer<BudgetViewModel>(
                     builder: ((context, value, child) {
+                      final balance = value.getBalance();
+                      final budget = value.getBudget();
+                      double percentage = balance / budget;
+                      if (percentage < 0) {
+                        percentage = 0;
+                      }
+                      if (percentage > 1) {
+                        percentage = 1;
+                      }
+
                       return CircularPercentIndicator(
                         radius: screenSize.width / 2,
                         lineWidth: 10.0, // how thick the line is
-                        percent: (value.balance / value.budget), // percent goes from 0 -> 1
+                        percent: percentage, // percent goes from 0 -> 1
                         backgroundColor: Colors.white,
                         center: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "${format.currencySymbol}${formatter.format(value.balance).toString().split(".")[0]}",
+                              "${format.currencySymbol}${formatter.format(balance).toString().split(".")[0]}",
                               style: GoogleFonts.urbanist(
                                 fontSize: 30, 
                                 fontWeight: FontWeight.w600,
@@ -77,7 +87,7 @@ class HomePage extends StatelessWidget {
                               height: 8 
                             ),
                             Text(
-                              "Budget: ${format.currencySymbol}${formatter.format(value.budget).toString()}",
+                              "Budget: ${format.currencySymbol}${formatter.format(budget).toString()}",
                               style: GoogleFonts.openSans(
                                 fontSize: 11, 
                                 fontWeight: FontWeight.w400,
@@ -103,7 +113,7 @@ class HomePage extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Consumer<BudgetService>(
+                Consumer<BudgetViewModel>(
                   builder: ((context, value, child) {
                     return ListView.builder(
                       shrinkWrap: true,
